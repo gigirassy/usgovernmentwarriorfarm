@@ -1,0 +1,12 @@
+services:
+  usgovernment-warrior:
+    image: atdr.meo.ws/archiveteam/usgovernment-grab
+    command: --concurrent 20 blitzwing
+    deploy:
+      mode: replicated
+      replicas: 350
+    ports:
+      - "9010-9730:8001"
+    logging:
+      driver: none
+    restart: unless-stopped
