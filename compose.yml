@@ -4,7 +4,8 @@ services:
     command: --concurrent 20 blitzwing
     deploy:
       mode: replicated
-      replicas: 350
+      replicas: 700
+    cpus: 3
     ports:
       - "9010-9730:8001"
     logging:
