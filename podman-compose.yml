@@ -1,0 +1,9 @@
+services:
+  usgovernment-warrior:
+    image: atdr.meo.ws/archiveteam/usgovernment-grab
+    command: --concurrent 20 blitzwing
+    ports:
+      - "9010-9730:8001"
+    logging:
+      driver: none
+    restart: unless-stopped
