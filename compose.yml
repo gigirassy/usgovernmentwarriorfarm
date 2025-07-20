@@ -11,3 +11,4 @@ services:
     logging:
       driver: none
     restart: unless-stopped
+    cpu_shares: 64 # highly recommend you dont change this
