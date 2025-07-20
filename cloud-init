@@ -1,0 +1,46 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - nano
+  - apt-transport-https
+
+# comment out the below and remove the swapfile generation in runcmd if you're using a compatible provider
+#swap:
+#  filename: /swapfile
+#  size: auto
+#  maxsize: 10000MB
+
+runcmd:
+  - |
+    curl -fsSL https://download.docker.com/linux/debian/gpg \
+      | gpg --dearmor \
+      > /usr/share/keyrings/docker-ce.gpg
+    echo "deb [arch=$(dpkg --print-architecture) \
+      signed-by=/usr/share/keyrings/docker-ce.gpg] \
+      https://download.docker.com/linux/debian \
+      $(lsb_release -sc) stable" \
+      > /etc/apt/sources.list.d/docker.list
+
+    apt update && apt install -y \
+      docker-ce docker-ce-cli containerd.io \
+      docker-buildx-plugin docker-compose-plugin
+
+    systemctl enable --now docker
+
+    sudo dd if=/dev/zero of=/swapfile2 bs=1M count=10000 && sudo chmod 600 /swapfile2 && sudo mkswap /swapfile2 && sudo swapon /swapfile2
+
+    mkdir -p /root/warrior
+    cd /root/warrior
+    wget https://raw.githubusercontent.com/gigirassy/usgovernmentwarriorfarm/refs/heads/main/compose.yml
+
+# adjust below to your liking
+    sed -i 's/replicas: 700/replicas: 500/' compose.yml
+    sed -i 's/cpus: 3/cpus: 2/' compose.yml
+    sed -i 's/blitzwing/YOURNAMEHERE/' compose.yml
+    docker compose up -d
